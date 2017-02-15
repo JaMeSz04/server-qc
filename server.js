@@ -48,10 +48,58 @@ app.post('/getPattern', function(req, res){
 });
 
 
+app.post('/getHistory', function(req,res){
+    var query = "SELECT id, name , tested_date , score, shade from history_list;"
+    db.all(query, function(err, row){
+        if (err){
+            console.log("error ja : " + err);
+        } else {
+            console.log(row);
+            res.send(row);
+        }
+    });
+})
+
+app.post('/getEachHistory', function(req,res){
+    var query = "SELECT xPos, yPos from history_coordinate WHERE PID = '" + req.body.name + "';";
+    db.add(query, function(err, row){
+        if (err){
+            console.log("error get each history : " + err);
+        } else {
+            console.log(row);
+            res.send(row);
+        }
+    });
+});
+
+app.post('/saveGame' , function(req,res){
+    var name = req.body.name;
+    var score = req.body.score;
+    var fullScore = req.body.fullscore;
+    var cellList = req.body.cellList;
+    var timeSpend = req.body.timeSpend;
+    var date = req.body.date;
+    var shade = req.body.shade;
+    var shape = req.body.shape;
+
+    var realScore = score + "/" + fullScore;
+    var query = "INSERT INTO history_list(name ,score, tested_date, shade, time_spend, shape) VALUES ('" + name + "', '" + realScore + "', '" + 
+    date + "', '" + shade + "', '" + timeSpend + "', '" + shape + "');";
+
+    db.run(query , function(error){
+        if (error){
+            console.log("error: " + error);
+        }
+    });
+});
+
 app.post('/savePattern' , function(req,res){
     addPattern(req.body.name, req.body.options);
     res.send({"result" : "success"});
 });
 
+
+
 console.log("Hello");
-app.listen(3616, "192.168.1.106");
+//app.listen(3616, "192.168.1.106");
+app.listen(3616, "localhost");
