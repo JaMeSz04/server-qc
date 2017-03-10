@@ -47,9 +47,33 @@ app.post('/getPattern', function(req, res){
     });
 });
 
+app.post('/deletePattern', function (req,res){
+    var val;
+    db.all("SELECT PID from pattern_list WHERE pattern_name = '" + req.body.name + "';" , function(error, row){
+        val = row[0].PID;
+        console.dir(row);
+        console.log(val);
+        db.run("DELETE FROM coordinate WHERE P2ID = " + val + ";", function(error){
+            if (error){
+                console.log("error ja : " + error);
+            }
+        })
+
+        var query = "DELETE FROM pattern_list WHERE PID = '" + val + "';";
+
+        db.run(query, function(error){
+            if (error){
+                console.log("error na ja : " + error);
+            }
+        });
+        
+    });
+    
+})
+
 
 app.post('/getHistory', function(req,res){
-    var query = "SELECT id, name , tested_date , score, shade from history_list;"
+    var query = "SELECT id, name , tested_date , score, time_spend, shade, shape from history_list;"
     db.all(query, function(err, row){
         if (err){
             console.log("error ja : " + err);
