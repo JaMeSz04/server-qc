@@ -33,6 +33,16 @@ function addPattern(name,cellList){
     });
 }
 
+app.post('/addColor', function(req, res){
+    //implement here    
+});
+
+app.post('/getColor', function(req, res){
+    //implement here
+});
+
+
+
 
 app.post('/getPattern', function(req, res){
     var query = "SELECT pattern_name, PID, xPos, yPos from coordinate INNER JOIN pattern_list ON PID = P2ID";
