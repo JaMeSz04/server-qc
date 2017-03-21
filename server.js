@@ -37,6 +37,10 @@ app.post('/addColor', function(req, res){
     //implement here    
 });
 
+app.post('/createColor', function(req, res){
+ 
+});
+
 app.post('/getColor', function(req, res){
     //implement here
 });
