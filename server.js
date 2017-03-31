@@ -33,17 +33,54 @@ function addPattern(name,cellList){
     });
 }
 
-app.post('/addColor', function(req, res){
-    //implement here    
-});
 
 app.post('/createColor', function(req, res){
- 
+    var name = req.body.name;
+    var colorList = req.body.colorList;
+    for (var i = 0 ; i < colorList.length ; i++){
+        var temp = colorList[i].value.substring(5, colorList[i].value.length - 1 );
+
+        temp = temp.split(',');
+        var query = "INSERT INTO colors(id ,name, red, green, blue) VALUES ('" + (i + 1) + "', '" + name + "', '" + 
+        temp[0] + "', '" + temp[1] + "', '" + temp[2] + "');"
+        console.log(query);
+        db.run(query, function (error){
+            if (error){
+                console.log("error : " + error);
+            }
+        });
+    }
+
+});
+
+app.post('/deleteColor', function(req, res){
+    var name = req.body.name;
+    var query = "DELETE FROM color_sequence WHERE name = '" + name + "'";
+    db.run(query, function(error){
+        if (error){
+            console.log("error : " + error);
+        }
+    });
 });
 
 app.post('/getColor', function(req, res){
-    //implement here
+    var colorName = req.body.name;
+    var query = "SELECT * from colors ORDER BY id";
+    db.all(query, function (error, row){
+        if (error){
+            console.log("error: " + error);
+        } else {
+            var temp = [];
+            for (var i = 0 ; i < row.length ; i++){
+                temp.push({id : row[i].id, name : row[i].name, value : "rgb(" + row[i].red + "," + row[i].green + "," + row[i].blue + ")"});
+            }
+            res.send(temp);
+            console.dir(temp);
+        }
+    })
 });
+
+
 
 
 
@@ -140,4 +177,5 @@ app.post('/savePattern' , function(req,res){
 
 console.log("Hello");
 //app.listen(3616, "192.168.1.106");
+
 app.listen(3616, "localhost");
